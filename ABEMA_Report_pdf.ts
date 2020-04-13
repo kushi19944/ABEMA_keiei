@@ -25,22 +25,22 @@ async function GoogleLogIN() {
   await RPA.sleep(3000);
   const IDinput = await RPA.WebBrowser.wait(
     RPA.WebBrowser.Until.elementLocated({
-      css: '#identifierId',
+      id: 'Email',
     }),
     15000
   );
   await RPA.WebBrowser.sendKeys(IDinput, [`${process.env.ABEMA_ID}`]);
-  const NextButton1 = await RPA.WebBrowser.findElementById('identifierNext');
+  const NextButton1 = await RPA.WebBrowser.findElementById('next');
   await NextButton1.click();
   await RPA.sleep(3000);
   const PWInput = await RPA.WebBrowser.wait(
     RPA.WebBrowser.Until.elementLocated({
-      name: 'password',
+      id: 'password',
     }),
     15000
   );
   await RPA.WebBrowser.sendKeys(PWInput, [`${process.env.ABEMA_PW}`]);
-  const NextButton2 = await RPA.WebBrowser.findElementById(`passwordNext`);
+  const NextButton2 = await RPA.WebBrowser.findElementById(`submit`);
   await NextButton2.click();
   await RPA.sleep(10000);
 }
