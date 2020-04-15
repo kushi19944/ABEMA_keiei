@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { TargetLocator, WebElement } from 'selenium-webdriver';
 
 const SheetID = process.env.ABEMA_Report_SheetID;
-const SheetName = `1週前`;
+const SheetName = `全データ`;
 
 // エラー文を格納
 const ErrorText = [];
@@ -151,6 +151,7 @@ async function tableauOperation_function() {
       `document.getElementsByClassName('RelativeDateFilter')[0].children[0].children[1].children[0].click()`
     );
     await RPA.sleep(2000);
+    /*
     // 日付ダイアログの週を押す
     await RPA.WebBrowser.driver.executeScript(
       `document.getElementsByName('week')[0].click()`
@@ -161,22 +162,38 @@ async function tableauOperation_function() {
       `document.getElementsByClassName('RelativeDateFilterDialog')[0].children[2].children[0].children[0].click()`
     );
     // 今週 にチェックを入れる
-    /*
     await RPA.WebBrowser.driver.executeScript(
       `document.getElementsByClassName('rradio')[2].click()`
     );
     */
+    // 日 のタブをクリック
+    await RPA.WebBrowser.driver.executeScript(
+      `document.getElementsByClassName('RelativeDateFilterDialog')[0].children[0].children[4].children[0].click()`
+    );
+    await RPA.sleep(2000);
+    // 昨日にチェックを入れる
+    await RPA.WebBrowser.driver.executeScript(
+      `document.getElementsByClassName('RelativeDateFilterDialog')[0].children[2].children[0].children[0].click()`
+    );
     await RPA.sleep(2000);
     // 更新ボタンをおす
     const RefreshButton = await RPA.WebBrowser.findElementByClassName(
       'tabToolbarButton tab-widget refresh'
     );
     await RefreshButton.click();
-    await RPA.sleep(5000);
+    await RPA.Logger.info(`【タブロー】更新ボタン押しました`);
+    await RPA.sleep(7000);
     // 一度タブローのキャンバスをクリックする
     const CanvasElement: WebElement = await RPA.WebBrowser.driver.executeScript(
       `return document.getElementsByClassName('tab-clip')[0].children[1].children[0]`
     );
+    // タブローが更新されていない場合は終了させる
+    if ((await CanvasElement.isDisplayed()) == false) {
+      await RPA.Logger.info(`【タブロー】数値更新されていません.RPA停止します`);
+      await RPA.WebBrowser.quit();
+      await RPA.sleep(1000);
+      process.exit(0);
+    }
     await CanvasElement.click();
     await RPA.sleep(1000);
     // データダウンロード ボタンクリック
@@ -199,50 +216,56 @@ async function tableauOperation_function() {
 // CSVを読み込む
 async function ReadCSV_function() {
   try {
-    var FileNames: any = await RPA.File.list();
-    for (let i in FileNames) {
-      if (FileNames[i].includes('.csv') == true) {
-        FileNames = FileNames[i];
+    const filelists = await RPA.File.list();
+    const FileNames = [];
+    console.log(filelists);
+    for (let i in filelists) {
+      if (filelists[i].includes('.csv') == true) {
+        FileNames[0] = filelists[i];
+        console.log(FileNames);
         break;
       }
     }
-    const SheetData = await RPA.CSV.read({
-      filename: `${FileNames}`,
-      encoding: 'UTF16',
-      relaxColumnCount: true,
-      delimiter: `\t`, //切り分ける文字を指定
-    });
-    /* エンコードの種類
-      [
-        'UTF32',
-        'UTF16',
-        'UTF16BE',
-        'UTF16LE',
-        'BINARY',
-        'ASCII',
-        'JIS',
-        'UTF8',
-        'EUCJP',
-        'SJIS',
-        'UNICODE',
-      ];
-      */
-    console.log(SheetData[4]);
-    const NewData = [];
-    for (let i in SheetData[4]) {
-      if (SheetData[4][i] == '09.訪問UU') {
-        continue;
+    if (FileNames.length == 1) {
+      const SheetData = await RPA.CSV.read({
+        filename: `${FileNames}`,
+        encoding: 'UTF16',
+        relaxColumnCount: true,
+        delimiter: `\t`, //切り分ける文字を指定
+      });
+      /* エンコードの種類
+        [
+          'UTF32',
+          'UTF16',
+          'UTF16BE',
+          'UTF16LE',
+          'BINARY',
+          'ASCII',
+          'JIS',
+          'UTF8',
+          'EUCJP',
+          'SJIS',
+          'UNICODE',
+        ];
+        */
+      console.log(SheetData);
+      for (let i in SheetData[4]) {
+        try {
+          if (SheetData[4][i] == '09.訪問UU') {
+            continue;
+          }
+          if (SheetData[4][i] == '全体') {
+            continue;
+          }
+          if (SheetData[4][i] == 'SPTab-App') {
+            continue;
+          }
+          if (SheetData[4][i] == 'Abema復帰') {
+            continue;
+          }
+          tableauData.push(SheetData[4][i]);
+        } catch {}
       }
-      if (SheetData[4][i] == '全体') {
-        continue;
-      }
-      if (SheetData[4][i] == 'SPTab-App') {
-        continue;
-      }
-      if (SheetData[4][i] == 'Abema復帰') {
-        continue;
-      }
-      tableauData.push(SheetData[4][i]);
     }
   } catch (Error) {
     ErrorText[0] = Error;
@@ -259,13 +282,24 @@ async function SetValue_function() {
     tokenType: 'Bearer',
     expiryDate: parseInt(process.env.GOOGLE_EXPIRY_DATE, 10),
   });
-
-  for (let i in tableauData) {
-    await RPA.Google.Spreadsheet.setValues({
-      spreadsheetId: SheetID,
-      range: `${SheetName}!K${Number(i) + 2}:K${Number(i) + 2}`,
-      values: [[tableauData[i]]],
-      parseValues: true,
-    });
+  const DayData = await RPA.Google.Spreadsheet.getValues({
+    spreadsheetId: SheetID,
+    range: `${SheetName}!B1:B1`,
+  });
+  const FirstData = await RPA.Google.Spreadsheet.getValues({
+    spreadsheetId: SheetID,
+    range: `${SheetName}!B2:B100`,
+  });
+  for (let i in FirstData) {
+    if (FirstData[i][0] == DayData[0][0]) {
+      console.log(Number(i) + 2);
+      await RPA.Google.Spreadsheet.setValues({
+        spreadsheetId: SheetID,
+        range: `${SheetName}!N${Number(i) + 2}:N${Number(i) + 2}`,
+        values: [[tableauData[0]]],
+        parseValues: true,
+      });
+      break;
+    }
   }
 }
