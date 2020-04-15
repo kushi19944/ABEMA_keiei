@@ -2,8 +2,7 @@ import RPA from 'ts-rpa';
 import { TargetLocator, WebElement } from 'selenium-webdriver';
 
 const SheetID = process.env.ABEMA_Report_SheetID;
-const SheetName = `1週前`;
-const StartRow = 2;
+const SheetName = `全データ`;
 
 // エラー文を格納
 const ErrorText = [];
@@ -44,14 +43,10 @@ async function GetValue_function() {
     });
     const Data = await RPA.Google.Spreadsheet.getValues({
       spreadsheetId: SheetID,
-      range: `${SheetName}!B${StartRow}:B8`,
+      range: `${SheetName}!B1:B1`,
     });
-    // 行数を追加する
-    for (let i in Data) {
-      Data[i].push(Number(i) + StartRow);
-      // データを格納する
-      SheetData.push(Data[i]);
-    }
+    // データを格納する
+    SheetData.push(Data[0]);
   } catch (Error) {
     ErrorText[0] = Error;
   }
@@ -158,23 +153,28 @@ async function AndroidGetInstall_function(SheetData) {
 // スプレッドシートにデータを貼り付ける関数
 async function SetValue_function() {
   await RPA.Logger.info('＊＊＊スプレッドシート貼り付けに移行＊＊＊');
-  for (let i in SheetData) {
-    // データが4個全て揃っていたら貼り付ける
-    if (SheetData[i].length == 4) {
+  const FirstData = await RPA.Google.Spreadsheet.getValues({
+    spreadsheetId: SheetID,
+    range: `${SheetName}!B2:B100`,
+  });
+  for (let i in FirstData) {
+    if (FirstData[i][0] == SheetData[0][0]) {
+      console.log(Number(i) + 2);
       // iOS
       await RPA.Google.Spreadsheet.setValues({
         spreadsheetId: SheetID,
-        range: `${SheetName}!G${SheetData[i][1]}:G${SheetData[i][1]}`,
-        values: [[SheetData[i][2]]],
+        range: `${SheetName}!J${Number(i) + 2}:J${Number(i) + 2}`,
+        values: [[SheetData[0][1]]],
         parseValues: true,
       });
       // Android
       await RPA.Google.Spreadsheet.setValues({
         spreadsheetId: SheetID,
-        range: `${SheetName}!H${SheetData[i][1]}:H${SheetData[i][1]}`,
-        values: [[SheetData[i][3]]],
+        range: `${SheetName}!K${Number(i) + 2}:K${Number(i) + 2}`,
+        values: [[SheetData[0][2]]],
         parseValues: true,
       });
+      break;
     }
   }
   await RPA.Logger.info('＊＊＊完了＊＊＊');
