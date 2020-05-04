@@ -12,7 +12,7 @@ async function Start() {
   await RPA.File.rimraf({ dirPath: `${process.env.WORKSPACE_DIR}` });
   await RPA.Logger.info(RPA.File.outDir);
   // 指定したスプシを pdf で保存
-  await GoogleLogIN_function();
+  await GetPDF_function();
   // pdf をドライブにアップロードする
   await DriveUPload_function();
   // 全データシートの転記を行う
@@ -26,7 +26,7 @@ async function Start() {
 
 Start();
 
-async function GoogleLogIN_function() {
+async function GetPDF_function() {
   // 指定したシートIDをpdfで保存
   await RPA.WebBrowser.get(process.env.ABEMA_Report_pdf_URL);
   await RPA.sleep(3000);
@@ -168,6 +168,7 @@ async function Clear_function() {
     values: clear_data3,
     parseValues: true,
   });
+  /*
   // 目線を消す
   await RPA.Google.Spreadsheet.setValues({
     spreadsheetId: `${process.env.ABEMA_Report_SheetID}`,
@@ -176,6 +177,7 @@ async function Clear_function() {
     parseValues: true,
   });
   RPA.Logger.info(`＊＊＊ 古いデータの削除完了 ＊＊＊`);
+  */
 }
 
 // 日付の更新を行う
