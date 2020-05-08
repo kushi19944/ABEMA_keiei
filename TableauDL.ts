@@ -1,5 +1,4 @@
 import RPA from 'ts-rpa';
-import { Router } from 'express';
 import { TargetLocator, WebElement } from 'selenium-webdriver';
 
 const SheetID = process.env.ABEMA_Report_SheetID;
@@ -19,7 +18,7 @@ async function Start() {
     // タブロー復帰(LAP)
     //await RPA.WebBrowser.get(process.env.ABEMA_Report_tableauURL_LAP);
     // タブロー復帰(DAU)
-    await RPA.WebBrowser.get(process.env.ABEMA_Report_tableauURL_DAU);
+    await RPA.WebBrowser.get(`${process.env.ABEMA_Report_tableauURL_DAU}`);
     await CassoLogIN_function();
     await RPA.sleep(3000);
     await tableauOperation_function();
