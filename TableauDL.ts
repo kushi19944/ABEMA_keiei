@@ -12,7 +12,7 @@ const tableauData = [];
 async function Start() {
   try {
     // デバッグログを最小限にする
-    RPA.Logger.level = 'INFO';
+    //RPA.Logger.level = 'INFO';
     // 実行前にダウンロードフォルダを全て削除する
     await RPA.File.rimraf({ dirPath: `${process.env.WORKSPACE_DIR}` });
     // タブロー復帰(LAP)
@@ -270,6 +270,10 @@ async function tableauOperation_function() {
     await RPA.sleep(10000);
   } catch (Error) {
     ErrorText[0] = Error;
+    console.log(ErrorText);
+    await RPA.WebBrowser.quit();
+    await RPA.sleep(2000);
+    await process.exit();
   }
 }
 
