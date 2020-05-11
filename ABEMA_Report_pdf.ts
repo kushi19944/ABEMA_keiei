@@ -16,7 +16,7 @@ async function Start() {
   // pdf をドライブにアップロードする
   await DriveUPload_function();
   // 全データシートの転記を行う
-  await Transcribe_function();
+  //await Transcribe_function();
   // 古いデータの削除を行う
   await Clear_function();
   // 日付の更新を行う
@@ -144,6 +144,7 @@ async function Clear_function() {
     values: clear_data,
     parseValues: true,
   });
+  // iOS/Androind実績を消す
   const clear_data2 = [
     ['', ''],
     ['', ''],
@@ -153,15 +154,14 @@ async function Clear_function() {
     ['', ''],
     ['', ''],
   ];
-  // iOS/Androind実績を消す
   await RPA.Google.Spreadsheet.setValues({
     spreadsheetId: `${process.env.ABEMA_Report_SheetID}`,
     range: `全データ!J2:K8`,
     values: clear_data2,
     parseValues: true,
   });
-  const clear_data3 = [[''], [''], [''], [''], [''], [''], ['']];
   // 復帰獲得件数を消す
+  const clear_data3 = [[''], [''], [''], [''], [''], [''], ['']];
   await RPA.Google.Spreadsheet.setValues({
     spreadsheetId: `${process.env.ABEMA_Report_SheetID}`,
     range: `全データ!N2:N8`,
