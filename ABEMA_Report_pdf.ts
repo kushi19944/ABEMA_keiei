@@ -160,11 +160,18 @@ async function Clear_function() {
     values: clear_data2,
     parseValues: true,
   });
-  // 復帰獲得件数を消す
+  // 復帰獲得件数(DAU)を消す
   const clear_data3 = [[''], [''], [''], [''], [''], [''], ['']];
   await RPA.Google.Spreadsheet.setValues({
     spreadsheetId: `${process.env.ABEMA_Report_SheetID}`,
     range: `全データ!N2:N8`,
+    values: clear_data3,
+    parseValues: true,
+  });
+  // 復帰獲得件数(LAP)を消す
+  await RPA.Google.Spreadsheet.setValues({
+    spreadsheetId: `${process.env.ABEMA_Report_SheetID}`,
+    range: `全データ!Q2:Q8`,
     values: clear_data3,
     parseValues: true,
   });
