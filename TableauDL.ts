@@ -7,7 +7,7 @@ const SheetName = `全データ`;
 // エラー文を格納
 const ErrorText = [];
 // タブローの復帰数のデータを格納
-const tableauData = [];
+var tableauData = '';
 
 async function Start() {
   try {
@@ -17,7 +17,7 @@ async function Start() {
 
     await RPA.File.rimraf({ dirPath: `${process.env.WORKSPACE_DIR}` });
     // タブロー復帰(DAU)
-    await RPA.WebBrowser.get(`${process.env.ABEMA_Report_tableauURL_DAU}`);
+    await RPA.WebBrowser.get(process.env.ABEMA_Report_tableauURL_DAU);
     await CassoLogIN_function();
     await RPA.sleep(3000);
     await tableauOperation_function();
@@ -507,7 +507,7 @@ async function ReadCSV_function() {
           if (SheetData[4][i] == 'Abema復帰') {
             continue;
           }
-          tableauData[0] = SheetData[4][i];
+          tableauData = SheetData[4][i];
         } catch {}
       }
     }
@@ -520,6 +520,12 @@ async function ReadCSV_function() {
 async function SetValue_function() {
   await RPA.Logger.info('＊＊＊スプレッドシート貼り付けに移行＊＊＊');
   console.log(tableauData);
+  if (tableauData == '') {
+    RPA.Logger.info('タブローのデータがありません。停止します');
+    await RPA.WebBrowser.quit();
+    await RPA.sleep(2000);
+    await process.exit();
+  }
   await RPA.Google.authorize({
     //accessToken: process.env.GOOGLE_ACCESS_TOKEN,
     refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
@@ -540,7 +546,7 @@ async function SetValue_function() {
       await RPA.Google.Spreadsheet.setValues({
         spreadsheetId: SheetID,
         range: `${SheetName}!N${Number(i) + 2}:N${Number(i) + 2}`,
-        values: [[tableauData[0]]],
+        values: [[tableauData]],
         parseValues: true,
       });
       break;
@@ -572,7 +578,7 @@ async function SetValue_LAP_function() {
       await RPA.Google.Spreadsheet.setValues({
         spreadsheetId: SheetID,
         range: `${SheetName}!Q${Number(i) + 2}:Q${Number(i) + 2}`,
-        values: [[tableauData[0]]],
+        values: [[tableauData]],
         parseValues: true,
       });
       break;
