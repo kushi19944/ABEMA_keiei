@@ -84,34 +84,18 @@ async function tableauOperation_function() {
     await StopButton.click();
     await RPA.Logger.info('【タブロー】更新止めました');
     await RPA.sleep(3000);
-    /*
-    // ステータス の (すべて) にチェックの外す
-    await RPA.WebBrowser.driver.executeScript(
-      `document.getElementsByClassName('CFInnerContainer tab-ctrl-formatted-text tiledContent')[0].children[0].children[1].children[0].click();`
-    );
-    */
     // ステータスの全てにチェック入れる
     await RPA.WebBrowser.driver.executeScript(
       `document.getElementById('tabZoneId19').children[0].children[0].children[0].children[0].children[0].children[0].children[2].children[1].children[0].children[1].children[0].click()`
     );
     await RPA.sleep(2000);
     // ステータスの Abema復帰 のチェックを入れる
-    /*
-    const StatusList: WebElement = await RPA.WebBrowser.driver.executeScript(
-      `return document.getElementsByClassName('CategoricalFilterBox')[0].children[2].children[1].children[1].children[0].children`
-    );
-    */
     const StatusList: WebElement = await RPA.WebBrowser.driver.executeScript(`
    return document.getElementById('tabZoneId19').children[0].children[0].children[0].children[0].children[0].children[0].children[2].children[1].children[1].children[0].children`);
     for (let i in StatusList) {
       const StatusText = await StatusList[i].getText();
       if (StatusText == `Abema復帰`) {
         console.log(StatusText);
-        /*
-        await RPA.WebBrowser.driver.executeScript(
-          `document.getElementsByClassName('CategoricalFilterBox')[0].children[2].children[1].children[1].children[0].children[${i}].children[1].children[0].click()`
-        );
-        */
         await RPA.WebBrowser.driver.executeScript(
           `document.getElementById('tabZoneId19').children[0].children[0].children[0].children[0].children[0].children[0].children[2].children[1].children[1].children[0].children[${i}].children[1].children[0].click()`
         );
@@ -123,31 +107,16 @@ async function tableauOperation_function() {
       }
     }
     // デバイス の全てにチェックを入れる
-    /*
-    await RPA.WebBrowser.driver.executeScript(
-      `document.getElementsByClassName('CFInnerContainer tab-ctrl-formatted-text tiledContent')[1].children[0].children[1].children[0].click()`
-    );
-    */
     await RPA.WebBrowser.driver.executeScript(
       `document.getElementById('tabZoneId18').children[0].children[0].children[0].children[0].children[0].children[0].children[2].children[1].children[0].children[1].children[0].click()`
     );
     await RPA.sleep(1000);
     // デバイス の全てにチェックを外す
-    /*
-    await RPA.WebBrowser.driver.executeScript(
-      `document.getElementsByClassName('CFInnerContainer tab-ctrl-formatted-text tiledContent')[1].children[0].children[1].children[0].click()`
-    );
-    */
     await RPA.WebBrowser.driver.executeScript(
       `document.getElementById('tabZoneId18').children[0].children[0].children[0].children[0].children[0].children[0].children[2].children[1].children[0].children[1].children[0].click()`
     );
     await RPA.sleep(1000);
     // デバイス SPTab-App のチェックを入れる
-    /*
-    const DeviceList: WebElement = await RPA.WebBrowser.driver.executeScript(
-      `return document.getElementsByClassName('CFInnerContainer tab-ctrl-formatted-text tiledContent')[1].children[1].children[0].children`
-    );
-    */
     const DeviceList: WebElement = await RPA.WebBrowser.driver.executeScript(
       `return document.getElementById('tabZoneId18').children[0].children[0].children[0].children[0].children[0].children[0].children[2].children[1].children[1].children[0].children`
     );
@@ -155,11 +124,6 @@ async function tableauOperation_function() {
       const DeviceText = await DeviceList[i].getText();
       if (DeviceText == `SPTab-App`) {
         console.log(DeviceText);
-        /*
-        await RPA.WebBrowser.driver.executeScript(
-          `document.getElementsByClassName('CFInnerContainer tab-ctrl-formatted-text tiledContent')[1].children[1].children[0].children[${i}].children[1].children[0].click()`
-        );
-        */
         await RPA.WebBrowser.driver.executeScript(
           `document.getElementById('tabZoneId18').children[0].children[0].children[0].children[0].children[0].children[0].children[2].children[1].children[1].children[0].children[${i}].children[1].children[0].click()`
         );
@@ -170,30 +134,14 @@ async function tableauOperation_function() {
         break;
       }
     }
-    // 画面右側の”メジャーネーム”の全てに一度チェック入れてそのあと外す
-    /*
-    await RPA.WebBrowser.driver.executeScript(
-      `document.getElementsByClassName('CFInnerContainer tab-ctrl-formatted-text tiledContent')[2].children[0].children[1].children[0].click()`
-    );
-    */
     await RPA.WebBrowser.driver.executeScript(
       `document.getElementById('tabZoneId16').children[0].children[0].children[0].children[0].children[0].children[0].children[2].children[1].children[0].children[1].children[0].click()`
     );
     await RPA.sleep(1000);
-    /*
-    await RPA.WebBrowser.driver.executeScript(
-      `document.getElementsByClassName('CFInnerContainer tab-ctrl-formatted-text tiledContent')[2].children[0].children[1].children[0].click()`
-    );
-    */
     await RPA.WebBrowser.driver.executeScript(
       `document.getElementById('tabZoneId16').children[0].children[0].children[0].children[0].children[0].children[0].children[2].children[1].children[0].children[1].children[0].click()`
     );
     await RPA.sleep(1000);
-    /*
-    const MajorNameList: WebElement = await RPA.WebBrowser.driver.executeScript(
-      `return document.getElementsByClassName('CFInnerContainer tab-ctrl-formatted-text tiledContent')[2].children[1].children[0].children`
-    );
-    */
     const MajorNameList: WebElement = await RPA.WebBrowser.driver.executeScript(
       `return document.getElementById('tabZoneId16').children[0].children[0].children[0].children[0].children[0].children[0].children[2].children[1].children[1].children[0].children`
     );
@@ -201,11 +149,6 @@ async function tableauOperation_function() {
       const MajorNameText = await MajorNameList[i].getText();
       if (MajorNameText == `09.訪問UU`) {
         console.log(MajorNameText);
-        /*
-        await RPA.WebBrowser.driver.executeScript(
-          `document.getElementsByClassName('CFInnerContainer tab-ctrl-formatted-text tiledContent')[2].children[1].children[0].children[${i}].children[1].children[0].click()`
-        );
-        */
         await RPA.WebBrowser.driver.executeScript(
           `document.getElementById('tabZoneId16').children[0].children[0].children[0].children[0].children[0].children[0].children[2].children[1].children[1].children[0].children[${i}].children[1].children[0].click()`
         );
@@ -221,21 +164,6 @@ async function tableauOperation_function() {
       `document.getElementsByClassName('RelativeDateFilter')[0].children[0].children[1].children[0].click()`
     );
     await RPA.sleep(2000);
-    /*
-    // 日付ダイアログの週を押す
-    await RPA.WebBrowser.driver.executeScript(
-      `document.getElementsByName('week')[0].click()`
-    );
-    await RPA.sleep(1000);
-    // 前週 にチェックを入れる
-    await RPA.WebBrowser.driver.executeScript(
-      `document.getElementsByClassName('RelativeDateFilterDialog')[0].children[2].children[0].children[0].click()`
-    );
-    // 今週 にチェックを入れる
-    await RPA.WebBrowser.driver.executeScript(
-      `document.getElementsByClassName('rradio')[2].click()`
-    );
-    */
     // 日 のタブをクリック
     await RPA.WebBrowser.driver.executeScript(
       `document.getElementsByClassName('RelativeDateFilterDialog')[0].children[0].children[4].children[0].click()`
@@ -277,9 +205,15 @@ async function tableauOperation_function() {
       `return document.getElementsByClassName('tab-downloadDialog')[0].children[3]`
     );
     await DLbutton2.click();
-    await RPA.WebBrowser.takeScreenshot();
+    await RPA.sleep(5000);
+    const DLbutton3 = await RPA.WebBrowser.wait(
+      RPA.WebBrowser.Until.elementLocated({
+        className: 'fdiufnn low-density',
+      }),
+      20000
+    );
+    await DLbutton3.click();
     await RPA.Logger.info('【タブロー】CSVダウンロード中...');
-    await RPA.sleep(20000);
   } catch (Error) {
     ErrorText[0] = Error;
     console.log(ErrorText);
@@ -393,21 +327,6 @@ async function tableauOperation_LAP_function() {
       `document.getElementsByClassName('RelativeDateFilter')[0].children[0].children[1].children[0].click()`
     );
     await RPA.sleep(2000);
-    /*
-    // 日付ダイアログの週を押す
-    await RPA.WebBrowser.driver.executeScript(
-      `document.getElementsByName('week')[0].click()`
-    );
-    await RPA.sleep(1000);
-    // 前週 にチェックを入れる
-    await RPA.WebBrowser.driver.executeScript(
-      `document.getElementsByClassName('RelativeDateFilterDialog')[0].children[2].children[0].children[0].click()`
-    );
-    // 今週 にチェックを入れる
-    await RPA.WebBrowser.driver.executeScript(
-      `document.getElementsByClassName('rradio')[2].click()`
-    );
-    */
     // 日 のタブをクリック
     await RPA.WebBrowser.driver.executeScript(
       `document.getElementsByClassName('RelativeDateFilterDialog')[0].children[0].children[4].children[0].click()`
@@ -448,8 +367,15 @@ async function tableauOperation_LAP_function() {
     await RPA.WebBrowser.driver.executeScript(
       `document.getElementsByClassName('tab-downloadDialog')[0].children[3].click()`
     );
+    await RPA.sleep(5000);
+    const DLbutton3 = await RPA.WebBrowser.wait(
+      RPA.WebBrowser.Until.elementLocated({
+        className: 'fdiufnn low-density',
+      }),
+      20000
+    );
+    await DLbutton3.click();
     await RPA.Logger.info('【タブロー】CSVダウンロード中...');
-    await RPA.sleep(10000);
   } catch (Error) {
     ErrorText[0] = Error;
     console.log(ErrorText);
