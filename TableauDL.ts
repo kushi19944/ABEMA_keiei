@@ -273,9 +273,10 @@ async function tableauOperation_function() {
     await DLButton.click();
     await RPA.sleep(2000);
     // データダウンロード 実行
-    await RPA.WebBrowser.driver.executeScript(
-      `document.getElementsByClassName('tab-downloadDialog')[0].children[3].click()`
+    const DLbutton2: WebElement = await RPA.WebBrowser.driver.executeScript(
+      `return document.getElementsByClassName('tab-downloadDialog')[0].children[3]`
     );
+    await DLbutton2.click();
     await RPA.Logger.info('【タブロー】CSVダウンロード中...');
     await RPA.sleep(10000);
   } catch (Error) {
