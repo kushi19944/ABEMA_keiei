@@ -214,6 +214,7 @@ async function tableauOperation_function() {
     );
     await DLbutton3.click();
     await RPA.Logger.info('【タブロー】CSVダウンロード中...');
+    await RPA.sleep(10000);
   } catch (Error) {
     ErrorText[0] = Error;
     console.log(ErrorText);
@@ -376,6 +377,7 @@ async function tableauOperation_LAP_function() {
     );
     await DLbutton3.click();
     await RPA.Logger.info('【タブロー】CSVダウンロード中...');
+    await RPA.sleep(10000);
   } catch (Error) {
     ErrorText[0] = Error;
     console.log(ErrorText);
