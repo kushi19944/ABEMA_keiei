@@ -277,8 +277,9 @@ async function tableauOperation_function() {
       `return document.getElementsByClassName('tab-downloadDialog')[0].children[3]`
     );
     await DLbutton2.click();
+    await RPA.WebBrowser.takeScreenshot();
     await RPA.Logger.info('【タブロー】CSVダウンロード中...');
-    await RPA.sleep(10000);
+    await RPA.sleep(20000);
   } catch (Error) {
     ErrorText[0] = Error;
     console.log(ErrorText);
