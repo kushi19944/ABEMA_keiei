@@ -16,7 +16,7 @@ async function Start() {
   // pdf をドライブにアップロードする
   await DriveUPload_function();
   // 全データシートの転記を行う
-  //await Transcribe_function();
+  await Transcribe_function();
   // 古いデータの削除を行う
   await Clear_function();
   // 日付の更新を行う
@@ -28,7 +28,9 @@ Start();
 
 async function GetPDF_function() {
   // 指定したシートIDをpdfで保存
-  await RPA.WebBrowser.get(process.env.ABEMA_Report_pdf_URL);
+  await RPA.WebBrowser.get(
+    `https://accounts.google.com/signin/v2/identifier?hl=ja&passive=true&&flowName=GlifWebSignIn&flowEntry=ServiceLogin`
+  );
   await RPA.sleep(3000);
   const IDinput = await RPA.WebBrowser.wait(
     RPA.WebBrowser.Until.elementLocated({
@@ -49,6 +51,8 @@ async function GetPDF_function() {
   await RPA.WebBrowser.sendKeys(PWInput, [`${process.env.ABEMA_PW}`]);
   const NextButton2 = await RPA.WebBrowser.findElementById(`submit`);
   await NextButton2.click();
+  await RPA.sleep(10000);
+  await RPA.WebBrowser.get(process.env.ABEMA_Report_pdf_URL);
   await RPA.sleep(10000);
 }
 
