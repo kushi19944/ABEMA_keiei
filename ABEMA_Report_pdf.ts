@@ -16,7 +16,7 @@ async function Start() {
   // pdf をドライブにアップロードする
   await DriveUPload_function();
   // 全データシートの転記を行う
-  await Transcribe_function();
+  //await Transcribe_function();
   // 古いデータの削除を行う
   await Clear_function();
   // 日付の更新を行う
