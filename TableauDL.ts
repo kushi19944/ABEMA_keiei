@@ -49,7 +49,7 @@ async function CassoLogIN_function() {
     RPA.WebBrowser.Until.elementLocated({
       id: 'username',
     }),
-    5000
+    20000
   );
   await RPA.WebBrowser.sendKeys(IDinput, [process.env.CyNumber]);
   const PWInput = await RPA.WebBrowser.findElementById(`password`);
