@@ -45,23 +45,19 @@ async function Start() {
 Start();
 
 async function CassoLogIN_function() {
-  try {
-    const IDinput = await RPA.WebBrowser.wait(
-      RPA.WebBrowser.Until.elementLocated({
-        id: 'username',
-      }),
-      5000
-    );
-    await RPA.WebBrowser.sendKeys(IDinput, [process.env.CyNumber]);
-    const PWInput = await RPA.WebBrowser.findElementById(`password`);
-    await RPA.WebBrowser.sendKeys(PWInput, [process.env.CyPass]);
-    const Button = await RPA.WebBrowser.findElementByCSSSelector(
-      `body > div > div.ping-body-container > div > form > div.ping-buttons > a`
-    );
-    await RPA.WebBrowser.mouseClick(Button);
-  } catch (Error) {
-    ErrorText[0] = Error;
-  }
+  const IDinput = await RPA.WebBrowser.wait(
+    RPA.WebBrowser.Until.elementLocated({
+      id: 'username',
+    }),
+    5000
+  );
+  await RPA.WebBrowser.sendKeys(IDinput, [process.env.CyNumber]);
+  const PWInput = await RPA.WebBrowser.findElementById(`password`);
+  await RPA.WebBrowser.sendKeys(PWInput, [process.env.CyPass]);
+  const Button = await RPA.WebBrowser.findElementByCSSSelector(
+    `body > div > div.ping-body-container > div > form > div.ping-buttons > a`
+  );
+  await RPA.WebBrowser.mouseClick(Button);
 }
 
 // フレームスイッチ
